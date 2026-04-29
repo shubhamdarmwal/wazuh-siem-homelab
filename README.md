@@ -24,7 +24,6 @@ following a SOC L1 analyst workflow.
 | Ubuntu Server 22.04 | Wazuh Server OS |
 | Windows 10 | Monitored Endpoint |
 | VirtualBox | Hypervisor |
-| Nmap | Network Reconnaissance Simulation |
 | PowerShell | Attack Simulation & Verification |
 
 ---
@@ -33,29 +32,19 @@ following a SOC L1 analyst workflow.
 
 ### 1. Brute Force Attack — T1110
 **Tool:** PowerShell `net use` command  
-**What happened:** Simulated 10 consecutive failed login attempts 
-against the local administrator account  
-**Wazuh Detection:** Event ID 4625 (Failed Logon) alerts triggered  
-**MITRE Technique:** T1110 — Brute Force  
+**What happened:** Simulated 10 consecutive failed login attempts
+against the local administrator account within 34 seconds  
+**Wazuh Detection:** 
+- Rule 60122 (Level 5) — Individual logon failures
+- Rule 60204 (Level 10) — Brute force pattern correlated
+- Rule 60115 (Level 9) — Account lockout triggered  
+**MITRE Techniques:** T1110, T1078, T1531
 
-### 2. Network Reconnaissance — T1046
-**Tool:** Nmap `-sV` service version scan  
-**What happened:** Performed a service version scan against the 
-Windows endpoint from the attacker machine  
-**Wazuh Detection:** Network scan activity flagged  
-**MITRE Technique:** T1046 — Network Service Discovery  
-
-### 3. System & User Discovery — T1083 / T1087
-**Tool:** PowerShell built-in cmdlets  
-**Commands Run:**
-```powershell
-whoami /all
-net user
-Get-LocalUser
-Get-ChildItem C:\Users\
-```
-**Wazuh Detection:** Event ID 4688 (Process Creation) logged  
-**MITRE Techniques:** T1083 — File Discovery, T1087 — Account Discovery
+### 2. Audit Policy Modification — T1562
+**Tool:** PowerShell `auditpol` command  
+**What happened:** Enabled process creation auditing on the endpoint  
+**Wazuh Detection:** Rule 60112 (Level 8) — Windows audit policy changed  
+**MITRE Technique:** T1562 — Impair Defenses
 
 ---
 
@@ -64,9 +53,9 @@ Get-ChildItem C:\Users\
 | Technique ID | Name | Tactic | Detected |
 |---|---|---|---|
 | T1110 | Brute Force | Credential Access | ✅ |
-| T1046 | Network Service Discovery | Discovery | ✅ |
-| T1083 | File and Directory Discovery | Discovery | ✅ |
-| T1087 | Account Discovery | Discovery | ✅ |
+| T1078 | Valid Accounts | Defense Evasion, Persistence | ✅ |
+| T1531 | Account Access Removal | Impact | ✅ |
+| T1562 | Impair Defenses | Defense Evasion | ✅ |
 
 ---
 
@@ -85,11 +74,6 @@ Get-ChildItem C:\Users\
 - **SOC Action:** Correlate with logon events to determine if 
   this follows a successful brute force
 
-### Network Scan
-- Nmap service version scan detected against Windows endpoint
-- Multiple ports probed in short timeframe
-- **SOC Action:** Identify scanning source, check if it's an 
-  authorized asset, escalate if unknown
 
 ---
 
@@ -98,11 +82,11 @@ Get-ChildItem C:\Users\
 ### Wazuh Agent Active
 ![Agent Active](screenshots/01-agent-active.png)
 
-### Brute Force Alerts — Event ID 4625
+### Brute Force Alerts — T1110
 ![Brute Force](screenshots/02-brute-force-alerts.png)
 
-### Process Execution Logs — Event ID 4688
-![Process Logs](screenshots/03-process-execution.png)
+### Account Lockout Detection — T1531
+![Account Lockout](screenshots/03-account-lockout.png)
 
 ### MITRE ATT&CK Coverage Map
 ![MITRE Map](screenshots/04-mitre-attack-map.png)
@@ -126,7 +110,7 @@ timeline, and recommended response actions is available here:
 - ✅ SIEM deployment and configuration (Wazuh)
 - ✅ Linux server administration (Ubuntu)
 - ✅ Windows endpoint monitoring and agent deployment
-- ✅ Attack simulation and purple team thinking
+- ✅ Attack simulation using PowerShell-based techniques
 - ✅ Alert triage and investigation workflow
 - ✅ MITRE ATT&CK framework mapping
 - ✅ Incident documentation and reporting
@@ -143,7 +127,7 @@ wazuh-siem-homelab/
 ├── screenshots/
 │   ├── 01-agent-active.png
 │   ├── 02-brute-force-alerts.png
-│   ├── 03-process-execution.png
+│   ├── 03-account-lockout.png
 │   ├── 04-mitre-attack-map.png
 │   └── 05-security-overview.png
 └── notes/
@@ -158,10 +142,9 @@ wazuh-siem-homelab/
 3. Install Wazuh using the official install script
 4. Deploy Windows 10 VM (2GB RAM, 50GB disk)
 5. Install Wazuh Agent on Windows, point to server IP
-6. Simulate attacks using PowerShell and Nmap
-7. Investigate alerts in Wazuh dashboard
-
-Full setup guide coming soon.
+6. Simulate brute force attack using PowerShell net use command
+7. Enable audit policy and observe policy change detection
+8. Investigate correlated alerts in Wazuh dashboard
 
 ---
 
