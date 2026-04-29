@@ -96,12 +96,12 @@ against the local administrator account within 34 seconds
 
 ---
 
-## 📝 Incident Report
+## 📝 Documentation
 
-A structured incident report documenting all findings, 
-timeline, and recommended response actions is available here:
+A structured incident report and setup troubleshooting notes are available here:
 
-📄 [View Incident Report](incident-report.md)
+📄 [View Incident Report](incident-report.md)  
+🔧 [View Setup Notes & Troubleshooting](notes/setup-notes.md)
 
 ---
 
