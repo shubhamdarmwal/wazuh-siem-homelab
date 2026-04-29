@@ -120,6 +120,8 @@ timeline, and recommended response actions is available here:
 ---
 
 ## 📁 Repository Structure
+
+```
 wazuh-siem-homelab/
 │
 ├── README.md                  ← This file
@@ -131,7 +133,8 @@ wazuh-siem-homelab/
 │   ├── 04-mitre-attack-map.png
 │   └── 05-security-overview.png
 └── notes/
-└── setup-notes.md         ← Personal notes during setup
+    └── setup-notes.md         ← Personal notes during setup
+```
 
 ---
 
