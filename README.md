@@ -153,5 +153,4 @@ wazuh-siem-homelab/
 
 ## 👤 Author
 
-**Shubham Singh Darmwal**  
-Cyber Security Enthusiast | Aspiring SOC Analyst  
+**Shubham Singh Darmwal**
